@@ -17,30 +17,34 @@ Observe how the type hint helps it perform static checking.
    Include the type of keys and values.
 
 """
+from typing import Iterable
 
 
-class Scorecard:
+class Scorecard(Iterable[float]):
     """Accumulate scores and compute their average."""
 
     def __init__(self):
         """Iniiialize a new Scorecard."""
-        self.scores = []
+        self.scores: list[float] = []
 
-    def add_score(self, score):
+    def add_score(self, score: float):
         """Add a score to the Scorecard."""
         self.scores.append(score)
 
-    def average(self):
+    def average(self) -> float:
         """Return the average of all scores, 0 if no scores."""
-        return sum(self.scores)/max(1,len(self.scores))
+        return sum(self.scores)/max(1, len(self.scores))
+
+    def __iter__(self):
+        return iter(self.scores)
 
 
-def print_scores(score_card):
+def print_scores(score_card: Scorecard):
     """Print statistics for the scorecard and the actual scores."""
 
     # What changes to Scorecard are needed in order to make this code work?
-    print(f"Scorecard contains {len(score_card)} scores.")
-    print(f"Min score: {min(score_card)}  Max score: {max(score_card)}.")
+    print(f"Scorecard contains {len(score_card.scores)} scores.")
+    print(f"Min score: {min(score_card.scores)}  Max score: {max(score_card.scores)}.")
     # What change to Scorecard is needed to make this work?
     for score in score_card:
         print(score)
@@ -60,10 +64,10 @@ if __name__ == "__main__":
     scorecard = Scorecard()
 
     print("Input 3 scores.")
-    for count in range(1,4):
-        score = input(f"input {ordinal(count)} score: ")
+    for count in range(1, 4):
+        score = float(input(f"input {ordinal(count)} score: "))
         scorecard.add_score(score)
 
-    print("The average is " + scorecard.average())
+    print("The average is " + f"{scorecard.average()}")
 
     print_scores(scorecard)
